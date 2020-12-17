@@ -1,7 +1,6 @@
 package com.BlizzardArmory.ui.news
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,6 @@ class NewsAdapter(private val list: MutableList<NewsMetaData>, val context: Cont
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        Log.i("TEST21432", itemCount.toString())
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == 0) {
             NewsViewHolder(inflater, parent, context)
@@ -41,6 +39,5 @@ class NewsAdapter(private val list: MutableList<NewsMetaData>, val context: Cont
         list.clear()
         list.addAll(newList)
         notifyItemRangeInserted(oldSize, list.size - oldSize)
-        Log.i("NEW SIZE", list.size.toString())
     }
 }

@@ -116,17 +116,15 @@ class SettingsFragment : Fragment() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 selectedLanguage = parent.getItemAtPosition(position) as String
-                Log.i("lang", selectedLanguage)
-                setLocale()
                 if (position != 0) {
+                    Log.i("lang", selectedLanguage)
+                    setLocale()
                     EventBus.getDefault().post(LocaleSelectedEvent(locale))
                 }
-                try {
+                if (view != null) {
                     (view as TextView).setTextColor(Color.WHITE)
                     view.textSize = 20f
                     view.gravity = Gravity.CENTER
-                } catch (e: Exception) {
-                    Log.e("Error", e.toString())
                 }
             }
 

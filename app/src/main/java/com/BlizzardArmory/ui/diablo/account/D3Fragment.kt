@@ -243,7 +243,7 @@ class D3Fragment : Fragment() {
         val fragmentManager = parentFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.setCustomAnimations(R.anim.pop_enter, R.anim.pop_exit)
-        fragmentTransaction.add(R.id.fragment, d3CharacterNav, "d3nav")
+        fragmentTransaction.add(R.id.fragment, d3CharacterNav, "NAV_FRAGMENT")
         fragmentTransaction.addToBackStack("d3_nav").commit()
         parentFragmentManager.executePendingTransactions()
     }

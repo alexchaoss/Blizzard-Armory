@@ -9,6 +9,7 @@ import com.BlizzardArmory.ui.main.MainActivity
 import com.BlizzardArmory.ui.navigation.GamesActivity
 import com.BlizzardArmory.util.WebNewsScrapper
 import com.BlizzardArmory.util.events.FilterNewsEvent
+import com.BlizzardArmory.util.events.LoadNewsEvent
 import com.BlizzardArmory.util.events.LocaleSelectedEvent
 import com.BlizzardArmory.util.events.MoreNewsClickEvent
 import kotlinx.coroutines.*
@@ -20,12 +21,9 @@ import java.util.*
 
 class NewsListViewModel : BaseViewModel() {
 
-    private val parentJob = SupervisorJob()
-    private val coroutineScrope = CoroutineScope(parentJob + Dispatchers.IO)
-
     private var downloaded: MutableLiveData<Boolean> = MutableLiveData()
     private var showMore: MutableLiveData<Boolean> = MutableLiveData()
-    private var newsList: MutableLiveData<ArrayList<NewsMetaData>> = MutableLiveData()
+    private var newsList: MutableLiveData<MutableList<NewsMetaData>> = MutableLiveData()
     private var tempList: ArrayList<NewsMetaData> = arrayListOf()
 
     private var pageNumber: Int = 1
@@ -42,19 +40,18 @@ class NewsListViewModel : BaseViewModel() {
         return showMore
     }
 
-    fun getNewsList(): LiveData<ArrayList<NewsMetaData>> {
+    fun getNewsList(): LiveData<MutableList<NewsMetaData>> {
         return newsList
     }
 
     fun setupRecycler() {
         if (newsList.value!!.isNotEmpty()) {
-            newsList.value = newsList.value!!.distinct() as ArrayList<NewsMetaData>
+            newsList.value = newsList.value?.distinct()?.toMutableList()
         }
     }
 
     fun downloadNews() {
-        Log.i("called", "webscrapper download")
-        val job = coroutineScrope.launch {
+        val job = coroutineScope.launch {
             WebNewsScrapper.parseNewsList("https://news.blizzard.com/${MainActivity.locale}")
             Log.i("NEWS", WebNewsScrapper.newsList.toString())
             withContext(Dispatchers.Main) {
@@ -65,7 +62,6 @@ class NewsListViewModel : BaseViewModel() {
     }
 
     fun filterList() {
-        Log.i("WEBSCRAP NEWS SIZE", WebNewsScrapper.newsList.size.toString())
         val blizzlist = WebNewsScrapper.newsList.filter { GamesActivity.userNews?.blizzNews!! && it.game.toLowerCase(Locale.ROOT).contains("blizzard|深入暴雪|블리자드 인사이드".toRegex()) }
         val wowlist = WebNewsScrapper.newsList.filter { GamesActivity.userNews?.wowNews!! && it.game.toLowerCase(Locale.ROOT).contains("warcraft|魔獸|워크 래프트".toRegex()) }
         val d3list = WebNewsScrapper.newsList.filter { GamesActivity.userNews?.d3News!! && it.game.toLowerCase(Locale.ROOT).contains("diablo|暗黑破壞神|디아블로".toRegex()) }
@@ -87,12 +83,8 @@ class NewsListViewModel : BaseViewModel() {
         }
         tempList.reverse()
 
-        Log.i("TEMP NEWS SIZE", tempList.size.toString())
-
         newsList.value = tempList
         newsList.value?.add(NewsMetaData())
-
-        Log.i("NEWS SIZE", newsList.value?.size.toString())
 
         if (!EventBus.getDefault().isRegistered(this@NewsListViewModel)) {
             EventBus.getDefault().register(this@NewsListViewModel)
@@ -109,12 +101,11 @@ class NewsListViewModel : BaseViewModel() {
     @Subscribe(threadMode = ThreadMode.POSTING)
     public fun showMoreEventClicked(moreNewsClickEvent: MoreNewsClickEvent) {
         pageNumber++
-        Log.i("Show More", "page #${pageNumber}")
-        val job = coroutineScrope.launch {
+        val job = coroutineScope.launch {
             WebNewsScrapper.parseMoreNews("https://news.blizzard.com/${MainActivity.locale}/blog/list?pageNum=${pageNumber}&pageSize=30&community=all")
-            Log.i("NEWS", WebNewsScrapper.newsList.toString())
             withContext(Dispatchers.Main) {
                 showMore.value = true
+                EventBus.getDefault().post(LoadNewsEvent())
             }
         }
         jobs.add(job)
@@ -122,7 +113,6 @@ class NewsListViewModel : BaseViewModel() {
 
     @Subscribe(threadMode = ThreadMode.POSTING)
     public fun filterEventReceived(filterNewsEvent: FilterNewsEvent) {
-        filterList()
-        setupRecycler()
+        downloaded.value = true
     }
 }

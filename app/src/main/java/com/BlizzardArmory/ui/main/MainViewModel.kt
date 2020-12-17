@@ -18,7 +18,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun openLoginToBattleNet() {
-        battlenetOAuth2Params.value = BattlenetOAuth2Params(clientID, MainActivity.selectedRegion.toLowerCase(Locale.ROOT),
+        battlenetOAuth2Params.value = BattlenetOAuth2Params(clientID!!, MainActivity.selectedRegion.toLowerCase(Locale.ROOT),
                 URLConstants.CALLBACK_URL, "Blizzard Games Profiles", BattlenetConstants.SCOPE_WOW, BattlenetConstants.SCOPE_SC2)
     }
 }

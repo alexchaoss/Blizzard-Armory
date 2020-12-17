@@ -50,8 +50,6 @@ class WoWNavFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.wowPager.addOnLayoutChangeListener(PanelsChildGestureRegionObserver.Provider.get())
-
         val bundle = Bundle()
         bundle.putString("character", character)
         bundle.putString("realm", realm)

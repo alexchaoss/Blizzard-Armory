@@ -1,6 +1,5 @@
 package com.BlizzardArmory.util
 
-import android.util.Log
 import com.BlizzardArmory.model.news.NewsMetaData
 import com.BlizzardArmory.model.news.NewsPage
 import org.jsoup.Jsoup
@@ -12,10 +11,8 @@ object WebNewsScrapper {
 
     fun parseNewsList(pageURL: String) {
         newsList.clear()
-        Log.i("JSOUP", "URL: $pageURL")
         Jsoup.connect(pageURL).ignoreContentType(true).get().run {
             extractHtml()
-            Log.i("JSOUP", "ITEMS: ${newsList.size}")
         }
     }
 
@@ -28,14 +25,11 @@ object WebNewsScrapper {
                     .replace("""timestamp="[a-zA-Z]{3}"""".toRegex()) { it.value.substring(0, it.value.length - 1) }
                     .replace("""timestamp="[a-zA-Z]{3}.+\\""".toRegex()) { it.value.substring(0, it.value.length - 1) }
             html = html.substring(10, html.length - 3)
-            Log.i("JSOUP", html)
             Jsoup.parse(html).run {
                 extractHtml()
             }
             newsList.forEach {
-                Log.i("TEST DATA", it.game)
             }
-            Log.i("JSOUP", "ITEMS: ${newsList.size}")
         }
     }
 

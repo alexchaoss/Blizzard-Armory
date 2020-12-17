@@ -2,7 +2,6 @@ package com.BlizzardArmory.ui.news
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,9 +58,6 @@ class NewsListFragment : Fragment() {
                 (binding.newsRecycler.adapter as NewsAdapter).addItems(viewModel.getNewsList().value!!)
             }
         })
-        viewModel.getNewsList().observe(viewLifecycleOwner, { list ->
-            Log.i("setup recycler", "test")
-        })
     }
 
     private fun setBackToTopButton() {
@@ -81,7 +77,11 @@ class NewsListFragment : Fragment() {
             val job = viewModel.coroutineScope.launch {
                 withContext(Dispatchers.Main) {
                     binding.newsRecycler.layoutManager?.smoothScrollToPosition(binding.newsRecycler, RecyclerView.State(), 0)
-                    delay((binding.newsRecycler.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() * 100L)
+                    if ((binding.newsRecycler.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() > 30) {
+                        delay(1500)
+                    } else {
+                        delay((binding.newsRecycler.layoutManager as LinearLayoutManager).findLastVisibleItemPosition() * 50L)
+                    }
                     binding.newsRecycler.scrollToPosition(0)
                 }
             }

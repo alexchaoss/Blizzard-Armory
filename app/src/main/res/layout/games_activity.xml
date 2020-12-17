@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.navigation.NavigationView
+        <FrameLayout
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -35,14 +35,14 @@
                 android:layout_height="wrap_content"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        </com.google.android.material.navigation.NavigationView>
+        </FrameLayout>
 
-        <androidx.cardview.widget.CardView
+        <FrameLayout
             android:id="@+id/fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.google.android.material.navigation.NavigationView
+        <FrameLayout
             android:id="@+id/right_panel"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -65,7 +65,7 @@
                 layout="@layout/sc2_leaderboard_right_panel"
                 android:visibility="gone" />
 
-        </com.google.android.material.navigation.NavigationView>
+        </FrameLayout>
 
     </com.discord.panels.OverlappingPanelsLayout>
 

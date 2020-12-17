@@ -126,9 +126,7 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
     }
 
     private fun setNavigation() {
-        binding.navView.itemIconTintList = null
         setSupportActionBar(binding.topBar.toolbarMain)
-
         binding.topBar.toolbarMain.setNavigationOnClickListener {
             if (binding.overlappingPanel.getSelectedPanel() == OverlappingPanelsLayout.Panel.START) {
                 binding.overlappingPanel.closePanels()
@@ -136,7 +134,6 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
                 binding.overlappingPanel.openStartPanel()
             }
         }
-
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
@@ -210,6 +207,7 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i("REMOVED GESTURE", "REMOVED")
         PanelsChildGestureRegionObserver.Provider.get().remove(binding.fragment.id)
     }
 
@@ -565,7 +563,7 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
         val woWNavFragment = WoWNavFragment.newInstance(characterClicked, characterRealm, mediaString, selectedRegion)
         supportFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.pop_enter, R.anim.pop_exit)
-                .add(R.id.fragment, woWNavFragment)
+                .add(R.id.fragment, woWNavFragment, "NAV_FRAGMENT")
                 .addToBackStack("wow_nav").commit()
         supportFragmentManager.executePendingTransactions()
     }
@@ -585,11 +583,27 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
     }
 
     override fun onGestureRegionsUpdate(gestureRegions: List<Rect>) {
-        for (rect in gestureRegions) {
-            rect.set(215, rect.top, 865, rect.bottom)
+        Log.i("rect size", gestureRegions.size.toString())
+
+        when (supportFragmentManager.fragments.last().tag) {
+            "NAV_FRAGMENT",
+            "overwatchfragment" -> {
+                Log.i("GESTURE UPDATE", "UPDATED")
+                for (rect in gestureRegions) {
+                    rect.set((resources.displayMetrics.widthPixels * 0.25).toInt(), rect.top,
+                            (resources.displayMetrics.widthPixels * 0.75).toInt(), rect.bottom)
+                }
+            }
+            else -> {
+                for (rect in gestureRegions) {
+                    rect.set(resources.displayMetrics.widthPixels, rect.top, 0, rect.bottom)
+                }
+            }
         }
+
         binding.overlappingPanel.setChildGestureRegions(gestureRegions)
     }
+
 
     private fun handleViewState(viewState: GamesViewModel.ViewState) {
         binding.overlappingPanel.handleStartPanelState(viewState.startPanelState)
