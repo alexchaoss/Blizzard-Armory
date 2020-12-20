@@ -38,6 +38,10 @@ import java.util.*
 class SC2Fragment : Fragment() {
     private var prefs: SharedPreferences? = null
     private lateinit var errorMessages: ErrorMessages
+    private var regionId: Int? = null
+    private var realmId: Int? = null
+    private var profileId: String? = null
+
 
     private var _binding: Sc2FragmentBinding? = null
     private val binding get() = _binding!!
@@ -54,6 +58,9 @@ class SC2Fragment : Fragment() {
         errorMessages = ErrorMessages(this.resources)
         setObservers()
         prefs = PreferenceManager.getDefaultSharedPreferences(requireActivity())
+        regionId = arguments?.getInt("regionId")
+        realmId = arguments?.getInt("realmId")
+        profileId = arguments?.getString("profileId")
         viewModel.getBnetParams().value = activity?.intent?.extras?.getParcelable(BattlenetConstants.BUNDLE_BNPARAMS)
         val summaryBG = GradientDrawable()
         summaryBG.setStroke(6, Color.parseColor("#122a42"))
@@ -100,7 +107,12 @@ class SC2Fragment : Fragment() {
     private fun setObservers() {
         viewModel.getBnetParams().observe(viewLifecycleOwner, {
             viewModel.battlenetOAuth2Helper = BattlenetOAuth2Helper(it)
-            viewModel.downloadAccountInformation()
+            if (profileId == null || realmId == null || profileId == null) {
+                viewModel.downloadAccountInformation()
+            } else {
+                viewModel.downloadProfile(regionId!!, realmId!!, profileId!!)
+            }
+
         })
 
         viewModel.getAccount().observe(viewLifecycleOwner, {
@@ -115,12 +127,12 @@ class SC2Fragment : Fragment() {
                     dialog.addCustomView(layout, player.profileId)
                 }
                 dialog.setOnCancelListener {
-                    viewModel.downloadProfile(it[0])
+                    viewModel.downloadProfile(it[0].regionId, it[0].realmId, it[0].profileId)
                     binding.loadingCircle.visibility = View.VISIBLE
                 }
                 dialog.show()
             } else {
-                viewModel.downloadProfile(it[0])
+                viewModel.downloadProfile(it[0].regionId, it[0].realmId, it[0].profileId)
             }
         })
 
@@ -167,7 +179,7 @@ class SC2Fragment : Fragment() {
         layout.addView(button)
 
         button.setOnClickListener {
-            viewModel.downloadProfile(player)
+            viewModel.downloadProfile(player.regionId, player.realmId, player.profileId)
             binding.loadingCircle.visibility = View.VISIBLE
             dialog.dismiss()
         }

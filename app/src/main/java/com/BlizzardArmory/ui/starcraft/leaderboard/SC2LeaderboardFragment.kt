@@ -7,10 +7,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -19,16 +16,34 @@ import androidx.preference.PreferenceManager
 import com.BlizzardArmory.R
 import com.BlizzardArmory.databinding.Sc2LeaderboardsFragmentBinding
 import com.BlizzardArmory.network.URLConstants
+import com.BlizzardArmory.ui.main.MainActivity
 import com.BlizzardArmory.ui.navigation.GamesActivity
 import com.BlizzardArmory.ui.news.NewsPageFragment
 import com.BlizzardArmory.util.DialogPrompt
 
 class SC2LeaderboardFragment : Fragment(), SearchView.OnQueryTextListener {
 
-    private var leaderboardList = arrayListOf("Category", "Barbarian", "Crusader", "Demon Hunter", "Monk", "Necromancer", "Witch Doctor", "Wizard", "2 Player", "3 Player", "4 Player")
+    private var seasonList = arrayListOf<String>()
+    private var leagueList = arrayListOf("Select League", "Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master", "Grandmaster")
 
-    private var region: String = "US"
-    private var updatedSpinners = false
+    private var regionId: Int = 1
+    private var region: String = MainActivity.selectedRegion
+
+    private var v1Toggle = true
+    private var v2Toggle = false
+    private var v3Toggle = false
+    private var v4Toggle = false
+
+    private var randomToggle = false
+
+    private var currentTier = 0
+    private var currentDivision = 0
+
+    private var currentPlayerCountRank = 1
+
+    private var firstPage = true
+    private var backPage = false
+    private var prevCount = 0
 
     private var _binding: Sc2LeaderboardsFragmentBinding? = null
     private val binding get() = _binding!!
@@ -54,27 +69,22 @@ class SC2LeaderboardFragment : Fragment(), SearchView.OnQueryTextListener {
         GamesActivity.binding.rightPanelSc2.root.visibility = View.VISIBLE
         val prefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
-        if (!prefs?.contains("leaderboard_pulled")!!) {
+        if (!prefs?.contains("leaderboard_pulled_sc2")!!) {
             val dialog = DialogPrompt(requireContext())
             dialog.addTitle("New Feature!", 20F)
                     .addMessage("Welcome to the Starcraft 2 Leaderboards!\nPull from the right to open the Leaderboard menu!", 18F)
                     .addButton("Close", 16F, { dialog.dismiss() }).show()
-            prefs.edit()?.putString("leaderboard_pulled", "done")?.apply()
+            prefs.edit()?.putString("leaderboard_pulled_sc2", "done")?.apply()
         }
 
-        GamesActivity.binding.rightPanelD3.softcore.setOnClickListener {
-            GamesActivity.binding.rightPanelD3.softcore.setBackgroundResource(R.drawable.d3_leaderboards_button_selected)
-            GamesActivity.binding.rightPanelD3.hardcore.setBackgroundResource(R.drawable.d3_leaderboards_button)
-        }
+        binding.prevPage.visibility = View.INVISIBLE
 
-        GamesActivity.binding.rightPanelD3.hardcore.setOnClickListener {
-            GamesActivity.binding.rightPanelD3.hardcore.setBackgroundResource(R.drawable.d3_leaderboards_button_selected)
-            GamesActivity.binding.rightPanelD3.softcore.setBackgroundResource(R.drawable.d3_leaderboards_button)
-        }
+        setPageNavButtons()
 
-        setAdapter(leaderboardList, GamesActivity.binding.rightPanelD3.leaderboard)
-        setAdapter(resources.getStringArray(R.array.regions).asList(), GamesActivity.binding.rightPanelD3.region)
-
+        setAdapter(leagueList, GamesActivity.binding.rightPanelSc2.league)
+        setAdapter(resources.getStringArray(R.array.regions).asList(), GamesActivity.binding.rightPanelSc2.region)
+        setQueueIdButtons()
+        setTeamTypeButtons()
         setSearchButton()
 
         binding.searchView.queryHint = "Search.."
@@ -86,17 +96,200 @@ class SC2LeaderboardFragment : Fragment(), SearchView.OnQueryTextListener {
         URLConstants.loading = true
         binding.loadingCircle.visibility = View.VISIBLE
         setObservers()
+        viewModel.downloadCurrentSeason(1, region)
+    }
+
+    private fun setPageNavButtons() {
+        binding.prevPage.setOnClickListener {
+            if (currentTier >= 0) {
+                binding.nextPage.visibility = View.VISIBLE
+                backPage = true
+                if (currentTier - 1 == 0) {
+                    binding.prevPage.visibility = View.INVISIBLE
+                }
+                if (currentDivision > 0) {
+                    currentDivision--
+                    downloadLeaderboard()
+                } else if (currentTier != 0) {
+                    currentTier--
+                    currentDivision = 0
+                    downloadLeaderboard()
+                }
+            }
+        }
+
+        binding.nextPage.setOnClickListener {
+            if (currentTier < viewModel.getLeague().value!!.tier.size - 1) {
+                binding.prevPage.visibility = View.VISIBLE
+                firstPage = false
+                backPage = false
+                if (currentTier + 1 == viewModel.getLeague().value!!.tier.size - 1) {
+                    binding.nextPage.visibility = View.INVISIBLE
+                }
+                if (currentDivision < viewModel.getLeague().value!!.tier[currentTier].division.size - 1) {
+                    currentDivision++
+                    downloadLeaderboard()
+                } else {
+                    currentTier++
+                    currentDivision = 0
+                    downloadLeaderboard()
+                }
+            }
+        }
+    }
+
+    private fun downloadLeaderboard() {
+        binding.loadingCircle.visibility = View.VISIBLE
+        binding.leaderboardRecycler.apply {
+            adapter = LeaderboardAdapter(listOf(), requireContext(), currentPlayerCountRank)
+        }
+        viewModel.downloadLeaderboard(regionId,
+                viewModel.getLeague().value!!.tier[currentTier].division[currentDivision].ladder_id, region)
+    }
+
+    private fun setTeamTypeButtons() {
+        GamesActivity.binding.rightPanelSc2.arranged.setOnClickListener {
+            GamesActivity.binding.rightPanelSc2.arranged.setBackgroundResource(R.drawable.sc2_leaderboards_button_selected)
+            GamesActivity.binding.rightPanelSc2.random.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            randomToggle = false
+        }
+
+        GamesActivity.binding.rightPanelSc2.random.setOnClickListener {
+            GamesActivity.binding.rightPanelSc2.random.setBackgroundResource(R.drawable.sc2_leaderboards_button_selected)
+            GamesActivity.binding.rightPanelSc2.arranged.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            randomToggle = true
+        }
+    }
+
+    private fun setQueueIdButtons() {
+        GamesActivity.binding.rightPanelSc2.v1.setOnClickListener {
+            GamesActivity.binding.rightPanelSc2.v1.setBackgroundResource(R.drawable.sc2_leaderboards_button_selected)
+            GamesActivity.binding.rightPanelSc2.v2.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v3.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v4.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            v1Toggle = true
+            v2Toggle = false
+            v3Toggle = false
+            v4Toggle = false
+            viewModel.queueId = GamesActivity.binding.rightPanelSc2.v1.text.toString()
+        }
+
+        GamesActivity.binding.rightPanelSc2.v2.setOnClickListener {
+            GamesActivity.binding.rightPanelSc2.v1.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v2.setBackgroundResource(R.drawable.sc2_leaderboards_button_selected)
+            GamesActivity.binding.rightPanelSc2.v3.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v4.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            v1Toggle = false
+            v2Toggle = true
+            v3Toggle = false
+            v4Toggle = false
+            viewModel.queueId = GamesActivity.binding.rightPanelSc2.v2.text.toString()
+        }
+
+        GamesActivity.binding.rightPanelSc2.v3.setOnClickListener {
+            GamesActivity.binding.rightPanelSc2.v1.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v2.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v3.setBackgroundResource(R.drawable.sc2_leaderboards_button_selected)
+            GamesActivity.binding.rightPanelSc2.v4.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            v1Toggle = false
+            v2Toggle = false
+            v3Toggle = true
+            v4Toggle = false
+            viewModel.queueId = GamesActivity.binding.rightPanelSc2.v3.text.toString()
+        }
+
+        GamesActivity.binding.rightPanelSc2.v4.setOnClickListener {
+            GamesActivity.binding.rightPanelSc2.v1.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v2.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v3.setBackgroundResource(R.drawable.d3_leaderboards_button)
+            GamesActivity.binding.rightPanelSc2.v4.setBackgroundResource(R.drawable.sc2_leaderboards_button_selected)
+            v1Toggle = false
+            v2Toggle = false
+            v3Toggle = false
+            v4Toggle = true
+            viewModel.queueId = GamesActivity.binding.rightPanelSc2.v4.text.toString()
+        }
     }
 
     private fun setObservers() {
+        viewModel.getCurrentSeason().observe(viewLifecycleOwner, {
+            seasonList.add("Select Season")
+            for (i in 28..it.seasonId) {
+                seasonList.add(i.toString())
+            }
+            setAdapter(seasonList, GamesActivity.binding.rightPanelSc2.season)
+            viewModel.queueId = "1v1"
+            viewModel.leagueString = leagueList.last()
+            viewModel.seasonId = it.seasonId
+            viewModel.downloadLeague(region)
+        })
+        viewModel.getLeague().observe(viewLifecycleOwner, {
+            if (it.tier.size == 1 && it.tier[0].division.size == 1) {
+                binding.nextPage.visibility = View.INVISIBLE
+            }
+            prevCount = 0
+            currentPlayerCountRank = 1
+            backPage = false
+            viewModel.downloadLeaderboard(regionId, it.tier[currentTier].division[currentDivision].ladder_id, region)
+        })
+
         viewModel.getErrorCode().observe(viewLifecycleOwner, {
             binding.loadingCircle.visibility = View.GONE
+        })
+
+        viewModel.getLeaderboard().observe(viewLifecycleOwner, {
+            if (!firstPage) {
+                if (backPage) {
+                    currentPlayerCountRank -= it.size
+                } else {
+                    currentPlayerCountRank += prevCount
+                }
+
+            }
+            prevCount = it.size
+            binding.leaderboardRecycler.apply {
+                adapter = LeaderboardAdapter(it, context, currentPlayerCountRank)
+                binding.loadingCircle.visibility = View.GONE
+            }
         })
     }
 
     private fun setSearchButton() {
-        GamesActivity.binding.rightPanelD3.search.setOnClickListener {
-
+        GamesActivity.binding.rightPanelSc2.search.setOnClickListener {
+            if (GamesActivity.binding.rightPanelSc2.season.selectedItemPosition == 0) {
+                Toast.makeText(activity, "Please select a season", Toast.LENGTH_SHORT).show()
+            } else if (GamesActivity.binding.rightPanelSc2.region.selectedItemPosition == 0) {
+                Toast.makeText(activity, "Please select a region", Toast.LENGTH_SHORT).show()
+            } else if (GamesActivity.binding.rightPanelSc2.league.selectedItemPosition == 0) {
+                Toast.makeText(activity, "Please select a league", Toast.LENGTH_SHORT).show()
+            } else if (GamesActivity.binding.rightPanelSc2.league.selectedItem == "Grandmaster" && !v1Toggle) {
+                Toast.makeText(activity, "Grandmaster league can only be 1v1", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.seasonId = GamesActivity.binding.rightPanelSc2.season.selectedItem.toString().toInt()
+                viewModel.leagueString = GamesActivity.binding.rightPanelSc2.league.selectedItem.toString()
+                when (GamesActivity.binding.rightPanelSc2.region.selectedItem) {
+                    "US" -> regionId = 1
+                    "EU" -> regionId = 2
+                    "KR",
+                    "TW" -> regionId = 3
+                }
+                region = GamesActivity.binding.rightPanelSc2.region.selectedItem.toString()
+                if (randomToggle) {
+                    viewModel.teamType = 1
+                } else {
+                    viewModel.teamType = 0
+                }
+                currentDivision = 0
+                currentTier = 0
+                URLConstants.loading = true
+                binding.nextPage.visibility = View.VISIBLE
+                binding.loadingCircle.visibility = View.VISIBLE
+                binding.leaderboardRecycler.apply {
+                    adapter = LeaderboardAdapter(listOf(), requireContext(), currentPlayerCountRank)
+                }
+                viewModel.downloadLeague(region)
+                GamesActivity.binding.overlappingPanel.closePanels()
+            }
         }
     }
 

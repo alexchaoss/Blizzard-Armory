@@ -1,7 +1,9 @@
 package com.BlizzardArmory.ui.starcraft.leaderboard
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -10,10 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.BlizzardArmory.R
 import com.BlizzardArmory.model.starcraft.leaderboard.Character
 import com.BlizzardArmory.model.starcraft.leaderboard.LadderMembers
-import com.BlizzardArmory.network.oauth.BattlenetConstants
-import com.BlizzardArmory.network.oauth.BattlenetOAuth2Params
-import com.BlizzardArmory.ui.diablo.account.D3Fragment
 import com.BlizzardArmory.ui.navigation.GamesActivity
+import com.BlizzardArmory.ui.starcraft.profile.SC2Fragment
 
 
 class PlayerViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val context: Context) :
@@ -28,16 +28,20 @@ class PlayerViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val 
     }
 
     fun bind(player: LadderMembers) {
-
-
+        name?.text = player.character.displayName
+        icon?.visibility = View.GONE
         onClickCharacter(player.character)
     }
 
     private fun onClickCharacter(player: Character) {
-        val battlenetOAuth2Params: BattlenetOAuth2Params? = (context as GamesActivity).intent?.extras?.getParcelable(BattlenetConstants.BUNDLE_BNPARAMS)
         itemView.setOnClickListener {
-            val fragment: Fragment = D3Fragment()
-            context.supportFragmentManager.beginTransaction().add(R.id.fragment, fragment, "d3fragment").addToBackStack("d3fragment").commit()
+            val fragment: Fragment = SC2Fragment()
+            val bundle = Bundle()
+            bundle.putInt("regionId", player.region)
+            bundle.putInt("realmId", player.realm)
+            bundle.putString("profileId", player.id.toString())
+            fragment.arguments = bundle
+            (context as GamesActivity).supportFragmentManager.beginTransaction().add(R.id.fragment, fragment, "sc2fragment").addToBackStack("sc2").commit()
             context.supportFragmentManager.executePendingTransactions()
         }
     }

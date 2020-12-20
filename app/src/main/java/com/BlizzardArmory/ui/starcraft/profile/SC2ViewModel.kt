@@ -56,11 +56,10 @@ class SC2ViewModel : BaseViewModel() {
         jobs.add(job)
     }
 
-    fun downloadProfile(player: Player) {
+    fun downloadProfile(regionId: Int, realmId: Int, profileId: String) {
         URLConstants.loading = true
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSc2Profile(parseRegionId(player.regionId), player.realmId,
-                    player.profileId, MainActivity.locale, MainActivity.selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getClient().getSc2Profile(parseRegionId(regionId), realmId, profileId, MainActivity.locale, MainActivity.selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     profile.value = response.body()

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.BlizzardArmory.model.starcraft.leaderboard.LadderMembers
 import java.util.*
 
-class LeaderboardAdapter(private val list: List<List<LadderMembers>>, private val context: Context)
+class LeaderboardAdapter(private val list: List<List<LadderMembers>>, private val context: Context, private var playerRank: Int)
     : RecyclerView.Adapter<LeaderboardViewHolder>() {
 
     private var fullLeaderboardList = ArrayList<List<LadderMembers>>()
@@ -24,7 +24,7 @@ class LeaderboardAdapter(private val list: List<List<LadderMembers>>, private va
 
     override fun onBindViewHolder(holder: LeaderboardViewHolder, position: Int) {
         val team: List<LadderMembers> = fullLeaderboardList[position]
-        holder.bind(team, position)
+        holder.bind(team, playerRank + position)
     }
 
     override fun getItemCount(): Int = fullLeaderboardList.size

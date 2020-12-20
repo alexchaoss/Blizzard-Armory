@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/region"
+        app:layout_constraintBottom_toTopOf="@id/team_type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/season">
@@ -73,11 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
-            android:weightSum="2"
-            app:layout_constraintBottom_toTopOf="@id/region"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/queue_id_1">
+            android:weightSum="2">
 
             <Button
                 android:id="@+id/v3"
@@ -108,6 +104,45 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/team_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:weightSum="2"
+        app:layout_constraintBottom_toTopOf="@id/region"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/queue_id">
+
+        <Button
+            android:id="@+id/arranged"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/sc2_leaderboards_button_selected"
+            android:gravity="center"
+            android:text="Arranged"
+            android:textAlignment="center"
+            android:textColor="#FFF"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/random"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/d3_leaderboards_button"
+            android:gravity="center"
+            android:text="Random"
+            android:textAlignment="center"
+            android:textColor="#FFF"
+            android:textSize="20sp" />
+    </LinearLayout>
+
     <Spinner
         android:id="@+id/region"
         android:layout_width="match_parent"
@@ -118,7 +153,7 @@
         app:layout_constraintBottom_toTopOf="@id/league"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/queue_id" />
+        app:layout_constraintTop_toBottomOf="@id/team_type" />
 
     <Spinner
         android:id="@+id/league"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Blizz-Portal</string>
+    <string name="app_name">BlizzPortal</string>
     <string name="battle_tag" translatable="false">Battle tag</string>
     <string name="select_region">Select Region</string>
     <string name="login">Login</string>

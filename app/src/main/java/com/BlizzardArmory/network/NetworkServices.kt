@@ -8,6 +8,7 @@ import com.BlizzardArmory.model.diablo.data.eras.index.EraIndex
 import com.BlizzardArmory.model.diablo.data.seasons.index.SeasonIndex
 import com.BlizzardArmory.model.diablo.item.SingleItem
 import com.BlizzardArmory.model.diablo.items.Items
+import com.BlizzardArmory.model.starcraft.CurrentSeason
 import com.BlizzardArmory.model.starcraft.Player
 import com.BlizzardArmory.model.starcraft.leaderboard.LadderTeam
 import com.BlizzardArmory.model.starcraft.league.League
@@ -229,14 +230,20 @@ interface NetworkServices {
                               @Query("token") accessToken: String?): Response<Profile>
 
     @GET(" sc2/legacy/ladder/{regionId}/{ladderId}")
-    suspend fun getSc2LadderLeaderboard(@Path("regionId") regionId: Int,
-                                        @Path("ladderId") ladderId: Int): Response<LadderTeam>
+    suspend fun getSc2LadderLeaderboard(@Path("regionId") regionId: String,
+                                        @Path("ladderId") ladderId: Int,
+                                        @Query("region") region: String): Response<LadderTeam>
 
     @GET("data/sc2/league/{seasonId}/{queueId}/{teamType}/{leagueId}")
     suspend fun getSc2League(@Path("seasonId") seasonId: Int,
                              @Path("queueId") queueId: Int,
                              @Path("teamType") teamType: Int,
-                             @Path("leagueId") leagueId: Int): Response<League>
+                             @Path("leagueId") leagueId: Int,
+                             @Query("region") region: String): Response<League>
+
+    @GET(" sc2/ladder/season/{regionId}")
+    suspend fun getSc2CurrentSeason(@Path("regionId") regoinId: String,
+                                    @Query("region") region: String): Response<CurrentSeason>
 
     //Overwatch endpoint
     @GET

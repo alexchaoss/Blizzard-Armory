@@ -29,8 +29,13 @@ class LeaderboardViewHolder(inflater: LayoutInflater, parent: ViewGroup, private
     fun bind(team: List<LadderMembers>, position: Int) {
         rank?.text = position.toString()
         when {
-            team[0].previousRank == position -> rank?.text = " -  ${position}"
-            team[0].previousRank == 0 -> rank?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.exclamation, 0, 0, 0)
+            team[0].previousRank == position -> {
+                rank?.text = "-    ${position}"
+                rank?.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            }
+            team[0].previousRank == 0 -> {
+                rank?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.exclamation, 0, 0, 0)
+            }
             team[0].previousRank > position -> rank?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_up, 0, 0, 0)
             team[0].previousRank < position -> rank?.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_down, 0, 0, 0)
         }
