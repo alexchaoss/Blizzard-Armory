@@ -504,9 +504,8 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
     }
 
     private fun searchD3Profile(dialog: DialogPrompt) {
-        val btagRegex = Regex(".*#[0-9]*")
         when {
-            (dialog.tagMap["btag_field"] as EditText).text.toString().matches(btagRegex) -> {
+            !(dialog.tagMap["btag_field"] as EditText).text.toString().matches(".+#[0-9]+".toRegex()) -> {
                 Toast.makeText(dialog.context, "Please enter a BattleTag", Toast.LENGTH_SHORT).show()
             }
             (dialog.tagMap["region_spinner"] as Spinner).selectedItem.toString().equals("Select Region", ignoreCase = true) -> {
@@ -514,7 +513,8 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
             }
             else -> {
                 dialog.dismiss()
-                callD3Activity((dialog.tagMap["btag_field"] as EditText).text.toString().toLowerCase(Locale.ROOT), (dialog.tagMap["region_spinner"] as Spinner).selectedItem.toString())
+                callD3Activity((dialog.tagMap["btag_field"] as EditText).text.toString().replace("#", "-"),
+                        (dialog.tagMap["region_spinner"] as Spinner).selectedItem.toString())
             }
         }
     }
@@ -583,12 +583,9 @@ class GamesActivity : LocalizationActivity(), PanelsChildGestureRegionObserver.G
     }
 
     override fun onGestureRegionsUpdate(gestureRegions: List<Rect>) {
-        Log.i("rect size", gestureRegions.size.toString())
-
         when (supportFragmentManager.fragments.last().tag) {
             "NAV_FRAGMENT",
             "overwatchfragment" -> {
-                Log.i("GESTURE UPDATE", "UPDATED")
                 for (rect in gestureRegions) {
                     rect.set((resources.displayMetrics.widthPixels * 0.25).toInt(), rect.top,
                             (resources.displayMetrics.widthPixels * 0.75).toInt(), rect.bottom)

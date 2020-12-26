@@ -51,7 +51,6 @@
             android:layout_width="90dp"
             android:layout_height="110dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/forgelite_prime_mikanikos"
             app:layout_constraintBottom_toBottomOf="@id/border1"
             app:layout_constraintEnd_toEndOf="@id/border1"
             app:layout_constraintStart_toStartOf="@id/border1"
@@ -86,7 +85,6 @@
             android:layout_width="90dp"
             android:layout_height="110dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/pelagos"
             app:layout_constraintBottom_toBottomOf="@id/border2"
             app:layout_constraintEnd_toEndOf="@id/border2"
             app:layout_constraintStart_toStartOf="@id/border2"
@@ -121,7 +119,6 @@
             android:layout_width="90dp"
             android:layout_height="110dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/kleia"
             app:layout_constraintBottom_toBottomOf="@id/border3"
             app:layout_constraintEnd_toEndOf="@id/border3"
             app:layout_constraintStart_toStartOf="@id/border3"
@@ -259,18 +256,5 @@
             android:textColor="#edc201"
             android:textSize="16sp" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#99000000" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="In Developpement"
-        android:textColor="#fff"
-        android:textSize="30sp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

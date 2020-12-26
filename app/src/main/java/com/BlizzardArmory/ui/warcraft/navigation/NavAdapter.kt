@@ -22,9 +22,9 @@ class NavAdapter(fm: FragmentManager, private var totalTabs: Int, internal var b
                 return wowCharacterFragment
             }
             1 -> {
-                val reputationsFragment = CovenantFragment()
-                reputationsFragment.arguments = bundle
-                return reputationsFragment
+                val covenantFragment = CovenantFragment()
+                covenantFragment.arguments = bundle
+                return covenantFragment
             }
             2 -> {
                 val reputationsFragment = ReputationsFragment()

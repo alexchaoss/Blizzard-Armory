@@ -162,6 +162,10 @@ object URLConstants {
         return "https://blizzard-armory-server.herokuapp.com/covenant/$covenantId/$locale"
     }
 
+    fun getTechTalents(soulbindId: Int, locale: String): String {
+        return "https://blizzard-armory-server.herokuapp.com/tech_talents/$soulbindId/$locale"
+    }
+
     fun getReputations(locale: String): String {
         return "https://blizzard-armory-server.herokuapp.com/reputations/$locale"
     }

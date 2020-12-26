@@ -1,15 +1,14 @@
 package com.BlizzardArmory.ui.warcraft.covenant
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.BlizzardArmory.R
 import com.BlizzardArmory.model.warcraft.covenant.character.soulbind.Traits
+import com.BlizzardArmory.model.warcraft.covenant.techtalent.TechTalentWithIcon
 import com.BlizzardArmory.model.warcraft.covenant.techtalenttree.Talents
 
 class SoulbindViewHolder(inflater: LayoutInflater, parent: ViewGroup, private val context: Context) :
@@ -49,8 +48,9 @@ class SoulbindViewHolder(inflater: LayoutInflater, parent: ViewGroup, private va
         bg3 = node3!!.findViewById(R.id.bg)
     }
 
-    fun bind(trait: Traits, talents: List<Talents>) {
-        val techTalents = talents.filter { it.tier - 1 == trait.tier }
+    fun bind(talents: List<Talents>, trait: Traits, icons: List<TechTalentWithIcon>) {
+        /*val techTalents = talents.filter { it.tier == trait.tier }
+        val talentIcons = icons.filter { it.tier == trait.tier }
 
         Log.i("TALENT SIZE", techTalents.size.toString())
         when (techTalents.size) {
@@ -128,11 +128,20 @@ class SoulbindViewHolder(inflater: LayoutInflater, parent: ViewGroup, private va
             icon2?.visibility = View.INVISIBLE
             icon3?.visibility = View.INVISIBLE
             when(trait.display_order){
-                0 -> ring1?.setImageResource(R.drawable.soulbinds_tree_ring)
-                1 -> ring2?.setImageResource(R.drawable.soulbinds_tree_ring)
-                2 -> ring3?.setImageResource(R.drawable.soulbinds_tree_ring)
+                0 -> {
+                    ring1?.setImageResource(R.drawable.soulbinds_tree_ring)
+                    Glide.with(itemView).load(talentIcons.find { it.display_order == 0 }?.icon).circleCrop().into(bg1!!)
+                }
+                1 -> {
+                    ring2?.setImageResource(R.drawable.soulbinds_tree_ring)
+                    Glide.with(itemView).load(talentIcons.find { it.display_order == 1 }?.icon).circleCrop().into(bg2!!)
+                }
+                2 -> {
+                    ring3?.setImageResource(R.drawable.soulbinds_tree_ring)
+                    Glide.with(itemView).load(talentIcons.find { it.display_order == 2 }?.icon).circleCrop().into(bg3!!)
+                }
             }
-        }
+        }*/
 
     }
 }

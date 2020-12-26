@@ -44,7 +44,6 @@ class ProgressViewModel : BaseViewModel() {
             }
         }
         jobs.add(job)
-
     }
 
 

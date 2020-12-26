@@ -96,7 +96,6 @@ class WoWNavFragment : Fragment() {
     public fun networkEventReceived(networkEvent: NetworkEvent) {
         if (networkEvent.data) {
             AccountFragment.addOnBackPressCallback(activity as GamesActivity)
-            GamesActivity.hideFavoriteButton()
             activity?.supportFragmentManager?.popBackStack()
         }
     }

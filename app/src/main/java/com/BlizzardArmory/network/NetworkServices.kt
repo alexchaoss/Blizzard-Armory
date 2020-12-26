@@ -20,6 +20,8 @@ import com.BlizzardArmory.model.warcraft.achievements.custom.DetailedAchievement
 import com.BlizzardArmory.model.warcraft.charactersummary.CharacterSummary
 import com.BlizzardArmory.model.warcraft.covenant.character.soulbind.SoulbindInformation
 import com.BlizzardArmory.model.warcraft.covenant.covenant.custom.CovenantSpells
+import com.BlizzardArmory.model.warcraft.covenant.techtalent.TechTalentWithIcon
+import com.BlizzardArmory.model.warcraft.covenant.techtalenttree.TechTalentTree
 import com.BlizzardArmory.model.warcraft.encounters.EncountersInformation
 import com.BlizzardArmory.model.warcraft.equipment.Equipment
 import com.BlizzardArmory.model.warcraft.media.Media
@@ -33,7 +35,6 @@ import com.BlizzardArmory.model.warcraft.statistic.Statistic
 import com.BlizzardArmory.model.warcraft.talents.Talents
 import com.BlizzardArmory.model.warcraft.talents.TalentsIcons
 import com.BlizzardArmory.network.oauth.TokenResponse
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -81,7 +82,10 @@ interface NetworkServices {
     suspend fun getTalentsWithIcon(@Url url: String?): Response<List<TalentsIcons>>
 
     @GET
-    fun getCovenantSpells(@Url url: String): Call<List<CovenantSpells>>
+    suspend fun getTechTalentsWithIcon(@Url url: String?): Response<List<TechTalentWithIcon>>
+
+    @GET
+    suspend fun getCovenantSpells(@Url url: String): Response<List<CovenantSpells>>
 
     @GET
     suspend fun getReputationPlusParentInfo(@Url url: String): Response<List<ReputationPlusParentInfo>>
@@ -167,6 +171,11 @@ interface NetworkServices {
                              @Query("locale") locale: String?,
                              @Query("region") region: String?,
                              @Query("token") accessToken: String?): Response<SoulbindInformation>
+
+    @GET("/data/wow/tech-talent-tree/{id}")
+    suspend fun getTechTree(@Path("id") id: Int,
+                            @Query("locale") locale: String?,
+                            @Query("region") region: String?): Response<TechTalentTree>
 
     //D3 Endpoints
     @GET("d3/profile/{battletag}/")
