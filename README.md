@@ -9,6 +9,8 @@ __Currently supported games:__
 - Overwatch
 - more to come if Blizzard decides to add the API for those select games.
 
+*Hearthstone is not implemented as no user data is exposed.
+
 This app is currently only available on android phones of minimum SDK 21 and up. 
 
 ## Installation
