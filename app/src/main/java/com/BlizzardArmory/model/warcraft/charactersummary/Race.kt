@@ -1,5 +1,6 @@
 package com.BlizzardArmory.model.warcraft.charactersummary
 
+import com.BlizzardArmory.model.common.Key
 import com.google.gson.annotations.SerializedName
 
 

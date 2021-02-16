@@ -1,5 +1,7 @@
 package com.BlizzardArmory.model.warcraft.talents.specializationdata
 
+import com.BlizzardArmory.model.common.Links
+import com.BlizzardArmory.model.common.Media
 import com.google.gson.annotations.SerializedName
 
 

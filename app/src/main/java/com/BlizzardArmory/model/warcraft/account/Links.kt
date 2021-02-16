@@ -1,5 +1,6 @@
 package com.BlizzardArmory.model.warcraft.account
 
+import com.BlizzardArmory.model.common.Self
 import com.google.gson.annotations.SerializedName
 
 

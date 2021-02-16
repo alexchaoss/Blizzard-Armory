@@ -1,5 +1,7 @@
 package com.BlizzardArmory.model.warcraft.achievements.characterachievements
 
+import com.BlizzardArmory.model.common.Character
+import com.BlizzardArmory.model.common.Links
 import com.google.gson.annotations.SerializedName
 
 

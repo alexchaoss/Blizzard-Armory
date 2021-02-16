@@ -1,5 +1,6 @@
 package com.BlizzardArmory.model.warcraft.covenant.covenant
 
+import com.BlizzardArmory.model.common.Key
 import com.google.gson.annotations.SerializedName
 
 

@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.caverock:androidsvg-aar:1.4@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/053b319db96a3e4fcf0515e859db1f5c/jetified-androidsvg-aar-1.4/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/053b319db96a3e4fcf0515e859db1f5c/jetified-androidsvg-aar-1.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/053b319db96a3e4fcf0515e859db1f5c/jetified-androidsvg-aar-1.4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/38d4a8d2454835a261218f9bc565d756/jetified-androidsvg-aar-1.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/38d4a8d2454835a261218f9bc565d756/jetified-androidsvg-aar-1.4/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/38d4a8d2454835a261218f9bc565d756/jetified-androidsvg-aar-1.4/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.caverock/androidsvg-aar/1.4/835789cd3f1478210785d580714cb57d23aff096/androidsvg-aar-1.4-javadoc.jar!/" />
