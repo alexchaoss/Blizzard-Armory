@@ -30,8 +30,13 @@ class ProgressViewModel : BaseViewModel() {
 
     fun downloadEncounterInformation() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getEncounters(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getEncounters(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     encounters.value = response.body()

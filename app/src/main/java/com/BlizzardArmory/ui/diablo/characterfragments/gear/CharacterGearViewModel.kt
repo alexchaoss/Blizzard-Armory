@@ -58,7 +58,13 @@ class CharacterGearViewModel : BaseViewModel() {
         this.id = id
         this.selectedRegion = selectedRegion
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getHeroItems(battletag, id, MainActivity.locale, selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getD3Client().getHeroItems(
+                battletag,
+                id,
+                MainActivity.locale,
+                selectedRegion.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     itemsInformation.value = response.body()

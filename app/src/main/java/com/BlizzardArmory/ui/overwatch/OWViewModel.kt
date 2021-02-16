@@ -77,7 +77,8 @@ class OWViewModel : BaseViewModel() {
     fun downloadAccountInformation(username: String, platform: String) {
         URLConstants.loading = true
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getOWProfile(URLConstants.getOWProfile(username, platform))
+            val response = RetroClient.getOWClient()
+                .getOWProfile(URLConstants.getOWProfile(username, platform))
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     profile.value = response.body()

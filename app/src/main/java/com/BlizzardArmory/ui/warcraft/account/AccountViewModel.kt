@@ -26,7 +26,11 @@ class AccountViewModel : BaseViewModel() {
     fun downloadWoWCharacters() {
         URLConstants.loading = true
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getAccount(MainActivity.locale, MainActivity.selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getAccount(
+                MainActivity.locale,
+                MainActivity.selectedRegion.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     characters.value = response.body()

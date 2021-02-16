@@ -63,7 +63,11 @@ class AuthorizationTokenViewModel : BaseViewModel() {
         Log.i(BattlenetConstants.TAG, "retrieveAndStoreAccessToken for code $authorizationCode")
         val token = TokenResponse()
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getAccessToken(authorizationCode, getBnetParams().value!!.zone.toLowerCase(Locale.ROOT), getBnetParams().value!!.rederictUri)
+            val response = RetroClient.getGeneralClient().getAccessToken(
+                authorizationCode,
+                getBnetParams().value!!.zone.toLowerCase(Locale.ROOT),
+                getBnetParams().value!!.rederictUri
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     val tokenResponse = response.body()

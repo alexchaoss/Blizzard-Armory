@@ -66,7 +66,10 @@ class GamesViewModel : BaseViewModel() {
 
     fun downloadUserInfo() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getUserInfo(battlenetOAuth2Helper?.accessToken, MainActivity.selectedRegion.toLowerCase(Locale.ROOT))
+            val response = RetroClient.getGeneralClient().getUserInfo(
+                battlenetOAuth2Helper?.accessToken,
+                MainActivity.selectedRegion.toLowerCase(Locale.ROOT)
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     userInformation.value = response.body()
@@ -81,7 +84,12 @@ class GamesViewModel : BaseViewModel() {
 
     fun getRealms() {
         val jobUS = coroutineScope.launch {
-            val response = RetroClient.getClient().getRealmIndex("us", "dynamic-us", MainActivity.locale, battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getRealmIndex(
+                "us",
+                "dynamic-us",
+                MainActivity.locale,
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     wowRealms.value?.set("US", response.body()!!)
@@ -92,7 +100,12 @@ class GamesViewModel : BaseViewModel() {
         }
         jobs.add(jobUS)
         val jobEU = coroutineScope.launch {
-            val response = RetroClient.getClient().getRealmIndex("eu", "dynamic-eu", MainActivity.locale, battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getRealmIndex(
+                "eu",
+                "dynamic-eu",
+                MainActivity.locale,
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     wowRealms.value?.set("EU", response.body()!!)
@@ -103,7 +116,12 @@ class GamesViewModel : BaseViewModel() {
         }
         jobs.add(jobEU)
         val jobKR = coroutineScope.launch {
-            val response = RetroClient.getClient().getRealmIndex("kr", "dynamic-kr", MainActivity.locale, battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getRealmIndex(
+                "kr",
+                "dynamic-kr",
+                MainActivity.locale,
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     wowRealms.value?.set("KR", response.body()!!)
@@ -114,7 +132,12 @@ class GamesViewModel : BaseViewModel() {
         }
         jobs.add(jobKR)
         val jobTW = coroutineScope.launch {
-            val response = RetroClient.getClient().getRealmIndex("tw", "dynamic-tw", MainActivity.locale, battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getRealmIndex(
+                "tw",
+                "dynamic-tw",
+                MainActivity.locale,
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     wowRealms.value?.set("TW", response.body()!!)
@@ -128,8 +151,13 @@ class GamesViewModel : BaseViewModel() {
 
     fun downloadMedia(characterClicked: String, characterRealm: String, selectedRegion: String) {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getMedia(characterClicked.toLowerCase(Locale.ROOT), characterRealm.toLowerCase(Locale.ROOT),
-                    MainActivity.locale, selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getMedia(
+                characterClicked.toLowerCase(Locale.ROOT),
+                characterRealm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                selectedRegion.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     wowMediaCharacter.value = response.body()

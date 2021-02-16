@@ -47,7 +47,8 @@ class AchievementViewModel : BaseViewModel() {
 
     fun downloadAchievementInformation() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getAllAchievements(URLConstants.selectAchievementsURLFromLocale(MainActivity.locale))
+            val response = RetroClient.getWoWClient()
+                .getAllAchievements(URLConstants.selectAchievementsURLFromLocale(MainActivity.locale))
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     allAchievements.value = response.body()
@@ -61,7 +62,13 @@ class AchievementViewModel : BaseViewModel() {
 
     fun downloadCharacterAchievements() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getCharacterAchievements(character, realm, MainActivity.locale, region, battlenetOAuth2Helper?.accessToken)
+            val response = RetroClient.getWoWClient().getCharacterAchievements(
+                character,
+                realm,
+                MainActivity.locale,
+                region,
+                battlenetOAuth2Helper?.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     characterAchievements.value = response.body()
@@ -75,7 +82,9 @@ class AchievementViewModel : BaseViewModel() {
 
     fun downloadCategories() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getAchievementCategories(URLConstants.selectAchievementCategoriesURLFromLocale(MainActivity.locale))
+            val response = RetroClient.getWoWClient().getAchievementCategories(
+                URLConstants.selectAchievementCategoriesURLFromLocale(MainActivity.locale)
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     categories.value = response.body()

@@ -46,7 +46,8 @@ class ReputationsViewModel : BaseViewModel() {
 
     fun downloadReputationsPlusParentInfo() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getReputationPlusParentInfo(URLConstants.getReputations(MainActivity.locale))
+            val response = RetroClient.getWoWClient()
+                .getReputationPlusParentInfo(URLConstants.getReputations(MainActivity.locale))
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     reputationsWithParentInfo.value = response.body()
@@ -61,8 +62,13 @@ class ReputationsViewModel : BaseViewModel() {
 
     private fun downloadReputations() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getReputations(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getReputations(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     reputations.value = response.body()

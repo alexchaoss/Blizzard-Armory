@@ -39,7 +39,8 @@ class SC2LeaderboardViewModel : BaseViewModel() {
 
     fun downloadLeaderboard(regionId: Int, ladderId: Int, region: String) {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSc2LadderLeaderboard(parseRegionId(regionId), ladderId, region)
+            val response = RetroClient.getSc2Client()
+                .getSc2LadderLeaderboard(parseRegionId(regionId), ladderId, region)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     val board = response.body()
@@ -56,7 +57,8 @@ class SC2LeaderboardViewModel : BaseViewModel() {
 
     fun downloadLeague(region: String) {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSc2League(seasonId, getQueueAsInt(), teamType, getLeagueAsInt(), region)
+            val response = RetroClient.getSc2Client()
+                .getSc2League(seasonId, getQueueAsInt(), teamType, getLeagueAsInt(), region)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     league.value = response.body()
@@ -71,7 +73,8 @@ class SC2LeaderboardViewModel : BaseViewModel() {
 
     fun downloadCurrentSeason(regionId: Int, region: String) {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSc2CurrentSeason(parseRegionId(regionId), region)
+            val response =
+                RetroClient.getSc2Client().getSc2CurrentSeason(parseRegionId(regionId), region)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     season.value = response.body()

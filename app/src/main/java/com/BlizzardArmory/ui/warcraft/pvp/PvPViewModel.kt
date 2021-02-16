@@ -56,8 +56,14 @@ class PvPViewModel : BaseViewModel() {
 
     fun downloadRBGInfo() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getPvPBrackets(character.toLowerCase(Locale.ROOT), realm.toLowerCase(Locale.ROOT),
-                    "rbg", MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getPvPBrackets(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                "rbg",
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     pvpRBG = response.body()!!
@@ -74,8 +80,14 @@ class PvPViewModel : BaseViewModel() {
 
     fun download3v3Info() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getPvPBrackets(character.toLowerCase(Locale.ROOT), realm.toLowerCase(Locale.ROOT),
-                    "3v3", MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getPvPBrackets(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                "3v3",
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     pvp3v3 = response.body()!!
@@ -92,8 +104,14 @@ class PvPViewModel : BaseViewModel() {
 
     fun download2v2Info() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getPvPBrackets(character.toLowerCase(Locale.ROOT), realm.toLowerCase(Locale.ROOT),
-                    "2v2", MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getPvPBrackets(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                "2v2",
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     pvp2v2 = response.body()!!
@@ -110,7 +128,8 @@ class PvPViewModel : BaseViewModel() {
 
     private fun downloadBracket(url: String, bracket: String) {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getDynamicTier(url, region.toLowerCase(Locale.ROOT), MainActivity.locale)
+            val response = RetroClient.getWoWClient()
+                .getDynamicTier(url, region.toLowerCase(Locale.ROOT), MainActivity.locale)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     when (bracket) {
@@ -129,8 +148,13 @@ class PvPViewModel : BaseViewModel() {
 
     fun downloadPvPSummary() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getPvPSummary(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getPvPSummary(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     summary.value = response.body()

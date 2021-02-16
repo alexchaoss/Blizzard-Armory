@@ -40,8 +40,12 @@ class SC2ViewModel : BaseViewModel() {
     fun downloadAccountInformation() {
         URLConstants.loading = true
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSc2Player(GamesActivity.userInformation!!.userID, MainActivity.locale,
-                    MainActivity.selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getSc2Client().getSc2Player(
+                GamesActivity.userInformation!!.userID,
+                MainActivity.locale,
+                MainActivity.selectedRegion.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     accountInformation.value = response.body()
@@ -59,7 +63,14 @@ class SC2ViewModel : BaseViewModel() {
     fun downloadProfile(regionId: Int, realmId: Int, profileId: String) {
         URLConstants.loading = true
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSc2Profile(parseRegionId(regionId), realmId, profileId, MainActivity.locale, MainActivity.selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getSc2Client().getSc2Profile(
+                parseRegionId(regionId),
+                realmId,
+                profileId,
+                MainActivity.locale,
+                MainActivity.selectedRegion.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     profile.value = response.body()

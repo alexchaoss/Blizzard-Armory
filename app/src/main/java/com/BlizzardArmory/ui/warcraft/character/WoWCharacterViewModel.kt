@@ -74,8 +74,13 @@ class WoWCharacterViewModel : BaseViewModel() {
 
     fun downloadCharacterSummary() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getCharacter(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getCharacter(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     characterSummary.value = response.body()!!
@@ -93,8 +98,13 @@ class WoWCharacterViewModel : BaseViewModel() {
 
     fun downloadTalents() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSpecs(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getSpecs(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     talentsInfo.value = response.body()!!
@@ -108,7 +118,12 @@ class WoWCharacterViewModel : BaseViewModel() {
 
     fun downloadTalentIconsInfo() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getTalentsWithIcon(URLConstants.getTalentsIcons(characterSummary.value!!.characterClass.id, MainActivity.locale))
+            val response = RetroClient.getWoWClient().getTalentsWithIcon(
+                URLConstants.getTalentsIcons(
+                    characterSummary.value!!.characterClass.id,
+                    MainActivity.locale
+                )
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     talentsIcons.value = response.body()!!
@@ -122,8 +137,13 @@ class WoWCharacterViewModel : BaseViewModel() {
 
     fun downloadStats() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getStats(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getStats(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     statistic.value = response.body()!!
@@ -137,8 +157,13 @@ class WoWCharacterViewModel : BaseViewModel() {
 
     fun downloadEquipment() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getEquippedItems(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getEquippedItems(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     equipment.value = response.body()!!
@@ -152,8 +177,13 @@ class WoWCharacterViewModel : BaseViewModel() {
 
     fun downloadBackground() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getMedia(character.toLowerCase(Locale.ROOT),
-                    realm.toLowerCase(Locale.ROOT), MainActivity.locale, region.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getWoWClient().getMedia(
+                character.toLowerCase(Locale.ROOT),
+                realm.toLowerCase(Locale.ROOT),
+                MainActivity.locale,
+                region.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     media.value = response.body()!!
@@ -176,7 +206,8 @@ class WoWCharacterViewModel : BaseViewModel() {
         url = url.replace("https://${region.toLowerCase(Locale.ROOT)}.api.blizzard.com/", URLConstants.HEROKU_AUTHENTICATE)
 
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getDynamicEquipmentMedia(url, MainActivity.locale, region.toLowerCase(Locale.ROOT))
+            val response = RetroClient.getWoWClient()
+                .getDynamicEquipmentMedia(url, MainActivity.locale, region.toLowerCase(Locale.ROOT))
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     val mediaItem = response.body()!!

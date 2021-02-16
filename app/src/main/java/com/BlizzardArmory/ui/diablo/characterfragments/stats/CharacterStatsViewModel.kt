@@ -33,7 +33,13 @@ class CharacterStatsViewModel : BaseViewModel() {
         this.selectedRegion = selectedRegion
         URLConstants.loading = true
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getD3Hero(battletag, id, MainActivity.locale, selectedRegion.toLowerCase(Locale.ROOT), battlenetOAuth2Helper!!.accessToken)
+            val response = RetroClient.getD3Client().getD3Hero(
+                battletag,
+                id,
+                MainActivity.locale,
+                selectedRegion.toLowerCase(Locale.ROOT),
+                battlenetOAuth2Helper!!.accessToken
+            )
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     characterInformation.value = response.body()

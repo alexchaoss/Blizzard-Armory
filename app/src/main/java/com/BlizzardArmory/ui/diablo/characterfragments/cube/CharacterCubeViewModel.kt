@@ -32,7 +32,11 @@ class CharacterCubeViewModel : BaseViewModel() {
             Log.i("Cube", characterInformation.legendaryPowers[i].tooltipParams)
             val endpoint = characterInformation.legendaryPowers[i].tooltipParams.replace("/item/", "")
             val job = coroutineScope.launch {
-                val response = RetroClient.getClient().getItem(endpoint, MainActivity.selectedRegion.toLowerCase(Locale.ROOT), MainActivity.locale)
+                val response = RetroClient.getD3Client().getItem(
+                    endpoint,
+                    MainActivity.selectedRegion.toLowerCase(Locale.ROOT),
+                    MainActivity.locale
+                )
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         singleItem.value = response.body()!!

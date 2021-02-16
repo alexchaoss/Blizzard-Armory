@@ -48,7 +48,8 @@ class D3LeaderboardViewModel : BaseViewModel() {
 
     fun downloadSeasonIndex() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSeasonIndex(MainActivity.locale, MainActivity.selectedRegion)
+            val response = RetroClient.getD3Client()
+                .getSeasonIndex(MainActivity.locale, MainActivity.selectedRegion)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     seasonIndex.value = response.body()
@@ -67,7 +68,8 @@ class D3LeaderboardViewModel : BaseViewModel() {
 
     fun downloadSeason(id: String, leaderboardString: String, region: String) {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getSeasonLeaderboard(id.toInt(), leaderboardString, MainActivity.locale, region)
+            val response = RetroClient.getD3Client()
+                .getSeasonLeaderboard(id.toInt(), leaderboardString, MainActivity.locale, region)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     leaderboard.value = response.body()
@@ -86,7 +88,8 @@ class D3LeaderboardViewModel : BaseViewModel() {
 
     fun downloadEraIndex() {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getEraIndex(MainActivity.locale, MainActivity.selectedRegion)
+            val response = RetroClient.getD3Client()
+                .getEraIndex(MainActivity.locale, MainActivity.selectedRegion)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     eraIndex.value = response.body()
@@ -104,7 +107,8 @@ class D3LeaderboardViewModel : BaseViewModel() {
 
     fun downloadEra(id: String, leaderboardString: String, region: String) {
         val job = coroutineScope.launch {
-            val response = RetroClient.getClient().getEraLeaderboard(id.toInt(), leaderboardString, MainActivity.locale, region)
+            val response = RetroClient.getD3Client()
+                .getEraLeaderboard(id.toInt(), leaderboardString, MainActivity.locale, region)
             withContext(Dispatchers.Main) {
                 if (response.isSuccessful) {
                     leaderboard.value = response.body()
