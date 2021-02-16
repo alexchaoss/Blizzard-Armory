@@ -1,10 +1,6 @@
-| Codacy |
-| :----- |
-| [![Codacy Badge](https://api.codacy.com/project/badge/Grade/060c4a5fc578468cbfc43c0386900a3f)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=alexchaoss/Blizzard-Armory&amp;utm_campaign=Badge_Grade) |
-
-# Blizzard Games Profiles  
+# BlizzPortal 
   
-__Blizzard Game's Profiles__ is an android application which lets your browse your profiles and characters from multiple Blizzard's games. 
+__BlizzPortal__ is an android application which lets your browse your profiles and characters from multiple Blizzard's games. 
 
 __Currently supported games:__
 - World of Warcraft
@@ -12,6 +8,8 @@ __Currently supported games:__
 - Starcraft 2
 - Overwatch
 - more to come if Blizzard decides to add the API for those select games.
+
+*Hearthstone is not implemented as no user data is exposed.
 
 This app is currently only available on android phones of minimum SDK 21 and up. 
 
